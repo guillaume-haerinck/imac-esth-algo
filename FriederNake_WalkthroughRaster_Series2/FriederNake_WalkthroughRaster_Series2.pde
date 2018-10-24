@@ -2,8 +2,9 @@ float stepX = 50.0;
 float stepY = 50.0;
 float heightVariation = 1.0;
 float lineHeight = 50;
-float posX = 0;
-float posY = 0;
+float posX = stepX;
+float posY = stepY;
+float random = 0;
 final int SIZE_X = 640;
 final int SIZE_Y = 360;
 
@@ -21,10 +22,17 @@ void draw() {
   
   while(posX < SIZE_X) {
     while(posY < SIZE_Y) {
+      lineHeight = random(10, 200); // TODO random by step
       line(posX, posY, posX, posY + (lineHeight * heightVariation)); //<>//
-      posY += posY + (lineHeight * heightVariation) + stepY;
+      
+      random = random(0, 10);
+      if (random > 7) {
+        line(posX, posY, posX + stepX, posY);
+      }
+      
+      posY += (lineHeight * heightVariation) + stepY;
     }
-    posY = 0;
+    posY = stepY;
     posX += stepX;
   }
 }
