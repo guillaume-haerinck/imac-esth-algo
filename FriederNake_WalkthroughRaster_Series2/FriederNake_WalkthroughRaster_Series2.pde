@@ -1,11 +1,12 @@
 float stepX = 20.0;
 float stepY = 20.0;
-float padding = 30.0;
 int lineHeight = 0;
+float padding = 30;
 float posX = padding;
 float posY = padding;
-final int SIZE_X = 640;
-final int SIZE_Y = 640;
+
+final int SIZE_X = 640 - (int) padding;
+final int SIZE_Y = 640 - (int) padding;
 
 void setup() {
   size(640, 640);
@@ -15,15 +16,19 @@ void setup() {
 }
 
 void draw() {
-  while(posX < (SIZE_X - padding)) { // Columns
+  while(posX < SIZE_X) { // Columns
     while(posY < SIZE_Y) { // Rows
       // Vertical lines
       lineHeight = (int) random(1, 7) * 20;
-      line(posX, posY, posX, posY + lineHeight); //<>//
-      
+      float posYend = posY + lineHeight;
+      if (posYend > SIZE_Y) { posYend = SIZE_Y; }
+      line(posX, posY, posX, posYend);
+ //<>//
       // Horizontal lines
-      if ((random(0, 10) > 6) && (posY != padding)) {
-        line(posX, posY, posX + stepX, posY);
+      if (posY <= SIZE_Y) {
+        if ((random(0, 10) > 6)) {
+          line(posX, posY, posX + stepX, posY);
+        }
       }
       posY += lineHeight + stepY;
     }
