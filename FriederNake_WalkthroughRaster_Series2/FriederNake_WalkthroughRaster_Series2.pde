@@ -1,9 +1,11 @@
 float stepX = 20.0;
 float stepY = 20.0;
-int lineHeight = 0;
+int lineHeightUnit = 20;
+int lineHeightMultiplies[] = {1, 2, 4, 6};
 float padding = 30;
 float posX = padding;
 float posY = padding;
+int lineHeight = 0;
 
 final int SIZE_X = 690 - (int) padding;
 final int SIZE_Y = 690 - (int) padding;
@@ -19,7 +21,7 @@ void draw() {
   while(posX < SIZE_X) { // Columns
     while(posY < SIZE_Y) { // Rows
       // Vertical lines
-      lineHeight = (int) random(1, 7) * 20;
+      lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultiplies.length)];
       float posYend = posY + lineHeight;
       if (posYend > SIZE_Y) { posYend = SIZE_Y; }
       line(posX, posY, posX, posYend);
