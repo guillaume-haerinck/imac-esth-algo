@@ -1,12 +1,15 @@
+/* Free to change values */
 float stepX = 20.0;
 float stepY = 20.0;
 int lineHeightUnit = 20;
 int lineHeightMultiplies[] = {1, 2, 4, 6};
 float padding = 30;
+
+/* Good default, don't touch if you don't know */
 float posX = padding;
 float posY = padding;
 int lineHeight = 0;
-
+PImage distributionImage;
 final int SIZE_X = 690 - (int) padding;
 final int SIZE_Y = 690 - (int) padding;
 
@@ -15,9 +18,17 @@ void setup() {
   background(255);
   stroke(0);
   strokeWeight(4);
+  
+  // Map every color from 0-255 to 0-100
+  colorMode(RGB, 100);
+  distributionImage = loadImage("empty.png");
 }
 
 void draw() {
+  float c = alpha(distributionImage.get((int) posX, (int) posY));
+  fill(c);
+  println(c);
+  
   while(posX < SIZE_X) { // Columns
     while(posY < SIZE_Y) { // Rows
       // Vertical lines
