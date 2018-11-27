@@ -1,3 +1,7 @@
+// TODO baser la longueur des traits sur l'image comme leur spawn
+// TODO faire moyenne des valeurs de l'image autour du point choppé
+// TODO traits horizontaux sur le bas
+
 /* Free to change values */
 float stepX = 20.0;
 float stepY = 20.0;
@@ -21,27 +25,33 @@ void setup() {
   
   // Map every color from 0-255 to 0-100
   colorMode(RGB, 100);
-  distributionImage = loadImage("empty.png");
+  try {
+    distributionImage = loadImage("./distribution/slash.png");
+    if (distributionImage == null) { exit(); }
+  } catch (Exception e) {
+    println(e);
+  }
 }
 
-void draw() {
-  float c = alpha(distributionImage.get((int) posX, (int) posY));
-  fill(c);
-  println(c);
-  
+void draw() {  
   while(posX < SIZE_X) { // Columns
     while(posY < SIZE_Y) { // Rows
-      // Vertical lines
-      lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultiplies.length)];
-      float posYend = posY + lineHeight;
-      if (posYend > SIZE_Y) { posYend = SIZE_Y; }
-      line(posX, posY, posX, posYend);
- //<>//
-      // Horizontal lines
-      if ((posX + stepX) < SIZE_X) {
-        if (posY <= SIZE_Y) {
-          if ((random(0, 10) > 6)) {
-            line(posX, posY, posX + stepX, posY);
+      // Draw or not based on image transparency on this area
+      float distrib = alpha(distributionImage.get((int) posX, (int) posY));
+      println(distrib); // debug
+      if (random(100) <  distrib) {
+        // Vertical lines
+        lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultiplies.length)];
+        float posYend = posY + lineHeight;
+        if (posYend > SIZE_Y) { posYend = SIZE_Y; }
+        line(posX, posY, posX, posYend);
+       //<>//
+        // Horizontal lines
+        if ((posX + stepX) < SIZE_X) {
+          if (posY <= SIZE_Y) {
+            if ((random(10) > 6)) {
+              line(posX, posY, posX + stepX, posY);
+            }
           }
         }
       }
