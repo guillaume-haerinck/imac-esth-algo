@@ -6,8 +6,9 @@
 float stepX = 20.0;
 float stepY = 20.0;
 int lineHeightUnit = 20;
-int lineHeightMultiplies[] = {1, 2, 4, 6};
+int lineHeightMultiplies[] = {1, 2, 4, 6, 8};
 float padding = 30;
+float reduceHoleChance = 1.5;
 
 /* Good default, don't touch if you don't know */
 float posX = padding;
@@ -16,6 +17,7 @@ int lineHeight = 0;
 PImage distributionImage;
 final int SIZE_X = 690 - (int) padding;
 final int SIZE_Y = 690 - (int) padding;
+final int MAX_COLOR = lineHeightMultiplies.length - 1;
 
 void setup() {
   size(690, 690);
@@ -24,9 +26,9 @@ void setup() {
   strokeWeight(4);
   
   // Map every color from 0-255 to 0-100
-  colorMode(RGB, 100);
+  colorMode(RGB, MAX_COLOR);
   try {
-    distributionImage = loadImage("./distribution/slash.png");
+    distributionImage = loadImage("./distribution/fifty-full.png");
     if (distributionImage == null) { exit(); }
   } catch (Exception e) {
     println(e);
@@ -39,13 +41,21 @@ void draw() {
       // Draw or not based on image transparency on this area
       float distrib = alpha(distributionImage.get((int) posX, (int) posY));
       println(distrib); // debug
-      if (random(100) <  distrib) {
+      if (random(MAX_COLOR) <  distrib + reduceHoleChance) {
         // Vertical lines
-        lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultiplies.length)];
+        int lineHeightMultipliesMiddle = lineHeightMultiplies.length / 2;
+        
+        // TODO ameliorer pour englober pour ne pas limiter a une range, mais juste avoir plus de
+        // chance de tomber dedans
+        if (distrib > lineHeightMultipliesMiddle) {
+          lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultipliesMiddle, lineHeightMultiplies.length)]; //<>//
+        } else {
+          lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultipliesMiddle)];
+        }
+        
         float posYend = posY + lineHeight;
         if (posYend > SIZE_Y) { posYend = SIZE_Y; }
         line(posX, posY, posX, posYend);
-       //<>//
         // Horizontal lines
         if ((posX + stepX) < SIZE_X) {
           if (posY <= SIZE_Y) {

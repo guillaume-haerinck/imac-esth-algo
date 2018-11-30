@@ -1,6 +1,6 @@
 # IMAC Algorithmic Thinking
 
-(De)(Re)Coding Frieder Nake - Walkthrough Raster (Series 2)
+(De)(Re)Coding Frieder Nake - Walkthrough Raster (Series 2) - 1966
 
 ## Original artwork analysis
 
