@@ -1,4 +1,3 @@
-// TODO baser la longueur des traits sur l'image comme leur spawn
 // TODO faire moyenne des valeurs de l'image autour du point choppé
 // TODO traits horizontaux sur le bas
 
@@ -9,6 +8,7 @@ int lineHeightUnit = 20;
 int lineHeightMultiplies[] = {1, 2, 4, 6, 8};
 float padding = 30;
 float reduceHoleChance = 1.5;
+float alterheightChance = 1;
 
 /* Good default, don't touch if you don't know */
 float posX = padding;
@@ -25,10 +25,10 @@ void setup() {
   stroke(0);
   strokeWeight(4);
   
-  // Map every color from 0-255 to 0-100
+  // Map every color from 0-255 to MAX_COLOR
   colorMode(RGB, MAX_COLOR);
   try {
-    distributionImage = loadImage("./distribution/fifty-full.png");
+    distributionImage = loadImage("./distribution/circle.png");
     if (distributionImage == null) { exit(); }
   } catch (Exception e) {
     println(e);
@@ -38,24 +38,22 @@ void setup() {
 void draw() {  
   while(posX < SIZE_X) { // Columns
     while(posY < SIZE_Y) { // Rows
-      // Draw or not based on image transparency on this area
-      float distrib = alpha(distributionImage.get((int) posX, (int) posY));
-      println(distrib); // debug
+      float posXMapped = map(posX, 0f, SIZE_X, 0f, distributionImage.width);
+      float posYMapped = map(posY, 0f, SIZE_Y, 0f, distributionImage.height);
+      float distrib = getImageBrightnessNear(posXMapped, posYMapped, distributionImage);
+      
+      // Draw or not based on image brightness on this area
       if (random(MAX_COLOR) <  distrib + reduceHoleChance) {
         // Vertical lines
-        int lineHeightMultipliesMiddle = lineHeightMultiplies.length / 2;
-        
-        // TODO ameliorer pour englober pour ne pas limiter a une range, mais juste avoir plus de
-        // chance de tomber dedans
-        if (distrib > lineHeightMultipliesMiddle) {
-          lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultipliesMiddle, lineHeightMultiplies.length)]; //<>//
-        } else {
-          lineHeight = lineHeightUnit * lineHeightMultiplies[(int) random(lineHeightMultipliesMiddle)];
-        }
+        float gaussian = randomGaussian() * distrib * alterheightChance;
+        gaussian = constrain(gaussian, -lineHeightMultiplies.length + 1, lineHeightMultiplies.length - 1);
+        if (gaussian < 0) { gaussian = -gaussian; }
+        lineHeight = lineHeightUnit * lineHeightMultiplies[(int) gaussian]; //<>// //<>//
         
         float posYend = posY + lineHeight;
         if (posYend > SIZE_Y) { posYend = SIZE_Y; }
         line(posX, posY, posX, posYend);
+ 
         // Horizontal lines
         if ((posX + stepX) < SIZE_X) {
           if (posY <= SIZE_Y) {
@@ -70,4 +68,9 @@ void draw() {
     posY = padding;
     posX += stepX;
   }
+}
+
+float getImageBrightnessNear(float posX, float posY, PImage image) {
+  // TODO
+  return brightness(image.get((int) posX, (int) posY));
 }
