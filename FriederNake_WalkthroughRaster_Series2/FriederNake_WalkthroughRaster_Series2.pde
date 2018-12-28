@@ -1,6 +1,10 @@
 // TODO faire moyenne des valeurs de l'image autour du point choppé
 // TODO traits horizontaux sur le bas
 
+import controlP5.*;
+import java.util.*;
+ControlP5 cp5;
+
 /* Free to change values */
 float stepX = 20.0;
 float stepY = 20.0;
@@ -27,16 +31,28 @@ void setup() {
   
   // Map every color from 0-255 to MAX_COLOR
   colorMode(RGB, MAX_COLOR);
-  try {
-    distributionImage = loadImage("./distribution/circle.png");
-    if (distributionImage == null) { exit(); }
-  } catch (Exception e) {
-    println(e);
-  }
+  loadDistributionImage("circle");
+  
+  // Add the dropdown list
+  cp5 = new ControlP5(this);
+  List l = Arrays.asList("circle",
+  "empty",
+  "empty-full",
+  "fifty",
+  "full",
+  "row-empty",
+  "row-fifty");
+  
+  cp5.addScrollableList("dropdown")
+     .setPosition(0, 0)
+     .setSize(200, 100)
+     .setBarHeight(20)
+     .setItemHeight(20)
+     .addItems(l);
 }
 
-void draw() {  
-  while(posX < SIZE_X) { // Columns
+void draw() {
+  while(posX < SIZE_X) { // Columns //<>//
     while(posY < SIZE_Y) { // Rows
       float posXMapped = map(posX, 0f, SIZE_X, 0f, distributionImage.width);
       float posYMapped = map(posY, 0f, SIZE_Y, 0f, distributionImage.height);
@@ -70,6 +86,7 @@ void draw() {
   }
 }
 
+/* Drawing help functions */
 float getImageBrightnessNear(float posX, float posY, PImage image) {
   // TODO
   return brightness(image.get((int) posX, (int) posY));
