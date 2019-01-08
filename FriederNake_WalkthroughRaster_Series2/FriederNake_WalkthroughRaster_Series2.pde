@@ -1,7 +1,4 @@
-// TODO faire moyenne des valeurs de l'image autour du point choppé //<>// //<>//
-// TODO traits horizontaux sur le bas
-
-import controlP5.*;
+import controlP5.*; //<>//
 import java.util.*;
 ControlP5 cp5;
 
@@ -50,7 +47,8 @@ void setup() {
     .setSize(100, 100)
     .setBarHeight(20)
     .setItemHeight(guiHeight)
-    .addItems(l);
+    .addItems(l)
+    .close();
 
   cp5.addSlider("lineHeightUnit")
     .setPosition(guiWidth, 0)
@@ -133,6 +131,22 @@ void draw() {
 
 /* Drawing help functions */
 float getImageBrightnessNear(float posX, float posY, PImage image) {
-  // TODO
-  return brightness(image.get((int) posX, (int) posY));
+  float mediumBrightnessX = 0;
+  float mediumBrightnessY = 0;
+  
+  float maxPos = posX + 10;
+  if (maxPos > image.width) { maxPos =  image.width; }
+  for (float i = posX; i < maxPos; i++) {
+    mediumBrightnessX += image.get((int) posX, (int) posY);
+  }
+  mediumBrightnessX = mediumBrightnessX / maxPos;
+  
+  maxPos = posY + 10;
+  if (maxPos > image.height) { maxPos =  image.height; }
+  for (float i = posX; i < maxPos; i++) {
+    mediumBrightnessY += image.get((int) posX, (int) posY);
+  }
+  mediumBrightnessY = mediumBrightnessY / maxPos;
+  
+  return brightness((int) (mediumBrightnessX + mediumBrightnessY) / 2);
 }
