@@ -1,6 +1,5 @@
-// TODO if grey fifty pourcent chance to spawn only //<>//
-
-import controlP5.*;
+import controlP5.*; // You must install the lib with "Sketch/Import library..." //<>//
+import processing.svg.*;
 import java.util.*;
 ControlP5 cp5;
 
@@ -20,6 +19,7 @@ float posX = padding;
 float posY = padding + guiHeight;
 int lineHeight = 0;
 PImage distributionImage;
+boolean bSaveSVG;
 final int SIZE_X = 690;
 final int SIZE_Y = 690;
 final int MAX_COLOR = lineHeightMultiplies.length - 1;
@@ -37,16 +37,20 @@ void setup() {
   // Add Graphical user interface
   addGui();
   setLabelsToBlack();
+  bSaveSVG = false;
 }
 
 void draw() {
+  if (bSaveSVG == true) {
+    beginRecord(SVG, "save-svg/frame-####.svg");
+    redraw();
+  }
+  
   while (posX < SIZE_X - padding) { // Columns
     while (posY < SIZE_Y - padding) { // Rows
       float posXMapped = map(posX, 0f, SIZE_X, 0f, distributionImage.width);
       float posYMapped = map(posY, 0f, SIZE_Y, 0f, distributionImage.height);
       float distrib = getImageBrightnessNear(posXMapped, posYMapped, distributionImage);
-
-      // println(distrib);
 
       // Draw or not based on image brightness on this area
       if (random(MAX_COLOR) <  distrib + reduceHoleChance) {
@@ -78,6 +82,11 @@ void draw() {
     posY = padding + guiHeight;
     posX += stepX;
   }
+  
+  if (bSaveSVG == true) {
+    endRecord();
+    bSaveSVG = false;
+  }
 }
 
 /* Drawing help functions */
@@ -92,8 +101,6 @@ float getImageBrightnessNear(float posX, float posY, PImage image) {
   }
   mediumBrightnessX = mediumBrightnessX / maxPos;
   
-  // println(mediumBrightnessX);
-  
   maxPos = posY + 10;
   if (maxPos > image.height) { maxPos =  image.height; }
   for (float i = posX; i < maxPos; i++) {
@@ -102,4 +109,5 @@ float getImageBrightnessNear(float posX, float posY, PImage image) {
   mediumBrightnessY = mediumBrightnessY / maxPos;
   
   return brightness((int) (mediumBrightnessX + mediumBrightnessY) / 2);
+  // TODO if grey fifty pourcent chance to spawn only
 }

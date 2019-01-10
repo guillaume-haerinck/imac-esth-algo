@@ -53,6 +53,16 @@ void addGui() {
     .setSize(guiWidth, guiHeight)
     .setRange(30, 300)
     .setValue(30);
+    
+  cp5.addButton("saveSVG")
+     .setValue(0)
+     .setPosition(SIZE_X - 100, SIZE_Y - 20)
+     .setSize(100, 20);
+     
+  cp5.addButton("screenshot")
+     .setValue(0)
+     .setPosition(SIZE_X - 200, SIZE_Y - 20)
+     .setSize(100, 20);
 }
 
 void loadDistributionImage(String imageName) {
@@ -98,6 +108,14 @@ void alterheightChance(float n) {
 void padding(float n) {
   padding = n;
   redraw();
+}
+
+void saveSVG(int event) {
+    bSaveSVG = true;
+}
+
+void screenshot(int event) {
+    saveFrame("screenshots/screenshot-######.png");
 }
 
 void redraw() {
