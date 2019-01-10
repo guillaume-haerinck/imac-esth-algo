@@ -1,4 +1,6 @@
-import controlP5.*; //<>//
+// TODO if grey fifty pourcent chance to spawn only //<>//
+
+import controlP5.*;
 import java.util.*;
 ControlP5 cp5;
 
@@ -30,63 +32,10 @@ void setup() {
 
   // Map every color from 0-255 to MAX_COLOR
   colorMode(RGB, MAX_COLOR);
-  loadDistributionImage("circle");
+  loadDistributionImage("slash-medium");
 
-  // Add the GUI controls
-  cp5 = new ControlP5(this);
-  List l = Arrays.asList("circle", 
-    "empty", 
-    "empty-full", 
-    "fifty", 
-    "full", 
-    "row-empty", 
-    "row-fifty");
-
-  cp5.addScrollableList("dropdown")
-    .setPosition(0, 0)
-    .setSize(100, 100)
-    .setBarHeight(20)
-    .setItemHeight(guiHeight)
-    .addItems(l)
-    .close();
-
-  cp5.addSlider("lineHeightUnit")
-    .setPosition(guiWidth, 0)
-    .setSize(guiWidth, guiHeight)
-    .setRange(1, 50)
-    .setValue(20);
-    
-  cp5.addSlider("stepX")
-    .setPosition(guiWidth * 2, 0)
-    .setSize(guiWidth, guiHeight)
-    .setRange(1, 50)
-    .setValue(20);
-    
-  cp5.addSlider("stepY")
-    .setPosition(guiWidth * 3, 0)
-    .setSize(guiWidth, guiHeight)
-    .setRange(1, 50)
-    .setValue(20);
-    
-  cp5.addSlider("reduceHoleChance")
-    .setPosition(guiWidth * 4, 0)
-    .setSize(guiWidth, guiHeight)
-    .setRange(0, 2.5)
-    .setValue(1.5);
-    
-  cp5.addSlider("alterheightChance")
-    .setPosition(guiWidth * 5, 0)
-    .setSize(guiWidth, guiHeight)
-    .setRange(0, 5)
-    .setValue(1);
-    
-  cp5.addSlider("padding")
-    .setPosition(guiWidth * 6, 0)
-    .setSize(guiWidth, guiHeight)
-    .setRange(30, 300)
-    .setValue(30);
-
-  // Change GUI caption colors and position
+  // Add Graphical user interface
+  addGui();
   setLabelsToBlack();
 }
 
@@ -96,6 +45,8 @@ void draw() {
       float posXMapped = map(posX, 0f, SIZE_X, 0f, distributionImage.width);
       float posYMapped = map(posY, 0f, SIZE_Y, 0f, distributionImage.height);
       float distrib = getImageBrightnessNear(posXMapped, posYMapped, distributionImage);
+
+      // println(distrib);
 
       // Draw or not based on image brightness on this area
       if (random(MAX_COLOR) <  distrib + reduceHoleChance) {
@@ -140,6 +91,8 @@ float getImageBrightnessNear(float posX, float posY, PImage image) {
     mediumBrightnessX += image.get((int) posX, (int) posY);
   }
   mediumBrightnessX = mediumBrightnessX / maxPos;
+  
+  // println(mediumBrightnessX);
   
   maxPos = posY + 10;
   if (maxPos > image.height) { maxPos =  image.height; }
